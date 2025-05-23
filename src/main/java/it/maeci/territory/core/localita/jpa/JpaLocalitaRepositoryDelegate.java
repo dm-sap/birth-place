@@ -42,8 +42,8 @@ public interface JpaLocalitaRepositoryDelegate extends JpaRepository<Localita, L
      * @return a list of Localita entities that match the specified criteria
      */
     @Query(value = "SELECT * " +
-            "FROM CODIFICA3.LOCALITA l JOIN CODIFICA3.TERRITORIO t ON t.TERRITORIO_ID=l.TERRITORIO_ID " +
-            "WHERE t.TERRITORIO_ID = :identificativo " +
+            "FROM CODIFICA3.LOCALITA l " +
+            "WHERE l.TERRITORIO_ID = :identificativo " +
             "  AND ( " +
             "        :dataNascita IS NULL OR " +
             "        (l.DATA_INIZIO_VAL < :dataNascita " +

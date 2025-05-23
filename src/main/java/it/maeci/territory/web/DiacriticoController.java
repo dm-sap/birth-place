@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 /**
  * The DiacriticoController class provides RESTful API endpoints for managing diacritical characters.
  * It enables the retrieval of transliterations for specific diacritical characters through dedicated operations.
@@ -44,6 +46,17 @@ public class DiacriticoController {
     public DiacriticoView recuperaTraslitterazione(@PathVariable(value = "carattere") String lettera)
             throws DiacriticoNonTrovatoException {
         return diacriticoService.recuperaTraslitterazione(lettera);
+    }
+
+    /**
+     * Retrieves the transliterations of all diacritical characters.
+     *
+     * @return a list of {@link DiacriticoView} objects representing all diacritical characters with their transliterations
+     */
+    @GetMapping("/tutti")
+    @Operation(description = "Ritorna la traslitterazione di tutti i caratteri diacritici")
+    public List<DiacriticoView> recuperaTutti() {
+        return diacriticoService.recuperaTutti();
     }
 
 }

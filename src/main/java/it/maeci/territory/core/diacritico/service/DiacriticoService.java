@@ -6,6 +6,9 @@ import it.maeci.territory.core.diacritico.DiacriticoView;
 import it.maeci.territory.errors.DiacriticoNonTrovatoException;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class DiacriticoService {
 
@@ -26,5 +29,17 @@ public class DiacriticoService {
         Diacritico diacritico = repository.findByDiacritic(lettera)
                 .orElseThrow(() -> DiacriticoNonTrovatoException.perCarattere(lettera));
         return DiacriticoView.crea(diacritico);
+    }
+
+    /**
+     * Retrieves a list of all diacritical characters as view representations.
+     *
+     * @return a list of {@link DiacriticoView} objects representing all diacritical characters
+     */
+    public List<DiacriticoView> recuperaTutti(){
+        List<Diacritico> diacritico = repository.findAll();
+        return diacritico.stream()
+                .map(DiacriticoView::crea)
+                .collect(Collectors.toList());
     }
 }

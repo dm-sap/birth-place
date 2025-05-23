@@ -3,6 +3,7 @@ package it.maeci.territory.core.diacritico;
 import it.maeci.territory.core.diacritico.jpa.JpaDiacriticoRepositoryDelegate;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -34,5 +35,12 @@ public class DiacriticoRepository {
         return delegate.findByDiacritico(letter);
     }
 
-
+    /**
+     * Retrieves all {@link Diacritico} entities from the repository.
+     *
+     * @return a list of {@link Diacritico} objects representing all diacritical characters in the repository
+     */
+    public List<Diacritico> findAll() {
+        return delegate.findAll();
+    }
 }

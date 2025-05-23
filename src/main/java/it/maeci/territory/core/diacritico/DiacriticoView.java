@@ -8,7 +8,6 @@ import lombok.Setter;
 @Setter
 @Builder
 public class DiacriticoView {
-    private String diacriticoId;
     private String carDiacritico;
     private String traslIcao;
 
@@ -20,7 +19,6 @@ public class DiacriticoView {
      */
     public static DiacriticoView crea(Diacritico diacritico) {
         return DiacriticoView.builder()
-                .diacriticoId(diacritico.getDiacriticoId())
                 .carDiacritico(diacritico.getCarDiacritico())
                 .traslIcao(diacritico.getTraslIcao())
                 .build();
