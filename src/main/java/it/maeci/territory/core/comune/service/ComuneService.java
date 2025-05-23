@@ -7,7 +7,6 @@ import it.maeci.territory.core.comune.ComuneView;
 import it.maeci.territory.errors.ComuneNonTrovatoException;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,10 +34,9 @@ public class ComuneService {
      */
     public ComuneView recuperaComunePerCodiceCatastaleEData(String codeCatastale, String data) throws ComuneNonTrovatoException {
         CodiceCatastale code = CodiceCatastale.parse(codeCatastale);
-        LocalDate localDate = data != null ? LocalDate.parse(data) : null;
-        List<Comune> comuni = repository.findByCodCatastaleEData(code, localDate);
+        List<Comune> comuni = repository.findByCodCatastaleEData(code, data);
         if (comuni.isEmpty())
-            throw ComuneNonTrovatoException.perCodiceCatastaleInData(code, localDate);
+            throw ComuneNonTrovatoException.perCodiceCatastaleInData(code, data);
 
         return ComuneView.crea(comuni.stream()
                 .filter(Comune::isValidNow)
@@ -59,11 +57,11 @@ public class ComuneService {
      * @return a list of ComuneView objects representing filtered and sorted Comune entities
      */
     public List<ComuneView> recuperaComuniEDataENome(String data, String nome) {
-        LocalDate localDate = data != null ? LocalDate.parse(data) : null;
-        List<Comune> comuni = repository.findAllPerDataENome(localDate, nome);
+        String nomeComune = nome != null ? nome.toUpperCase() + "%" : "%";
+        List<Comune> comuni = repository.findAllPerDataENome(data, nomeComune);
         return comuni.stream()
                 .map(ComuneView::crea)
-                .sorted((t1, t2) -> t1.getNome().compareToIgnoreCase(t2.getNome()))
+                .sorted((c1, c2) -> c1.getNome().compareToIgnoreCase(c2.getNome()))
                 .collect(Collectors.toList());
     }
 }

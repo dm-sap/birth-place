@@ -59,7 +59,7 @@ public class ComuneNonTrovatoException extends RisorsaNonTrovataException {
      * @param localDate the {@code LocalDate} representing the date for which the search was conducted
      * @return an instance of {@code ComuneNonTrovatoException} containing the cadastral code and date
      */
-    public static ComuneNonTrovatoException perCodiceCatastaleInData(CodiceCatastale code, LocalDate localDate) {
+    public static ComuneNonTrovatoException perCodiceCatastaleInData(CodiceCatastale code, String localDate) {
         return new ComuneNonTrovatoException("Codice catastale: " + code.getCodice() + " in data: " + localDate);
     }
 

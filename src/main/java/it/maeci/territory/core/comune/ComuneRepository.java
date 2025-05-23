@@ -3,7 +3,6 @@ package it.maeci.territory.core.comune;
 import it.maeci.territory.core.comune.jpa.JpaComuneRepositoryDelegate;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -37,7 +36,7 @@ public class ComuneRepository {
      * @param codiceCatastale the codice catastale used as a search criterion
      * @return a list of Comune entities that match the provided codice catastale
      */
-    public List<Comune> findByCodCatastaleEData(CodiceCatastale codiceCatastale, LocalDate localDate) {
+    public List<Comune> findByCodCatastaleEData(CodiceCatastale codiceCatastale, String localDate) {
         return delegate.findByCodCatastaleEData(codiceCatastale.getCodice(), localDate);
     }
 
@@ -50,8 +49,7 @@ public class ComuneRepository {
      * @param nome      the name pattern to match against the Comune entity names
      * @return a list of Comune entities that match the specified date and name criteria
      */
-    public List<Comune> findAllPerDataENome(LocalDate localDate, String nome) {
-        String nomeComune = nome != null ? nome.toUpperCase() + "%" : "%";
-        return delegate.findAllPerDataENome(localDate, nomeComune);
+    public List<Comune> findAllPerDataENome(String localDate, String nome) {
+        return delegate.findAllPerDataENome(localDate, nome);
     }
 }
