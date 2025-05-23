@@ -23,7 +23,7 @@ public class JpaLocalitaRepositoryDelegateCustomImpl implements JpaLocalitaRepos
         filtraPerData(AND, dataNascita, queryBuilder);
         filtraPerNome(AND, nome, queryBuilder);
 
-        Query query = entityManager.createNativeQuery(queryBuilder.toString(), Territorio.class);
+        Query query = entityManager.createNativeQuery(queryBuilder.toString(), Localita.class);
 
         aggiuntaParametro("dataNascita", dataNascita, query);
         aggiuntaParametro("territorioId", territorioId, query);

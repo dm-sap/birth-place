@@ -1,13 +1,13 @@
 package it.maeci.territory.core.localita;
 
-import it.maeci.territory.core.territorio.Territorio;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 
@@ -18,12 +18,6 @@ import java.time.OffsetDateTime;
 public class Localita {
     @EmbeddedId
     private LocalitaId id;
-
-    @MapsId("territorioId")
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "TERRITORIO_ID", nullable = false)
-    private Territorio territorio;
 
     @Column(name = "NOME", nullable = false, length = 100)
     private String nome;
@@ -48,10 +42,10 @@ public class Localita {
      *
      * @param date the date to be validated
      * @return true if the date is after `dataInizioVal` and either before
-     *         `dataFineVal` or if `dataFineVal` is null; false otherwise
+     * `dataFineVal` or if `dataFineVal` is null; false otherwise
      */
     public boolean isValid(LocalDate date) {
-        return dataInizioVal.isBefore(date) &&(dataFineVal == null || dataFineVal.isAfter(date));
+        return dataInizioVal.isBefore(date) && (dataFineVal == null || dataFineVal.isAfter(date));
     }
 
 }
