@@ -34,7 +34,7 @@ public class ErroreServizioResponse {
 	public ErroreServizioResponse(TerritorioError feaError, String errore, String dettaglio, Integer status) {
 		super();
 		this.timestamp = new Date().getTime();
-		this.codice = "FEA_ERROR:" + feaError.name().toUpperCase();
+		this.codice = "TERRITORIO_ERROR:" + feaError.name().toUpperCase();
 		this.errore = errore;
 		this.dettaglio = dettaglio;
 		this.status = status;
