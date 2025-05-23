@@ -60,7 +60,7 @@ public class LocalitaNonTrovataException extends RisorsaNonTrovataException {
      * @return an instance of {@code LocalitaNonTrovataException} populated with the
      *         provided parameters
      */
-    public static LocalitaNonTrovataException perTerritorioDataENome(String identificativo, LocalDate data, String nomeLocalita) {
+    public static LocalitaNonTrovataException perTerritorioDataENome(String identificativo, String data, String nomeLocalita) {
         return new LocalitaNonTrovataException("Valido per identificativo territorio :" + identificativo + " ed in data: " + data + " e nome: " + nomeLocalita);
 
     }

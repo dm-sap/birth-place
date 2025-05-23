@@ -1,7 +1,6 @@
 package it.maeci.territory.core.localita;
 
 import it.maeci.territory.core.localita.jpa.JpaLocalitaRepositoryDelegate;
-import it.maeci.territory.core.territorio.Territorio;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
@@ -22,15 +21,6 @@ public class LocalitaRepository {
         this.delegate = delegate;
     }
 
-    /**
-     * Retrieves a list of Localita objects associated with a specific Territorio.
-     *
-     * @param territorio the Territorio for which the associated Localita entities are to be retrieved
-     * @return a list of Localita entities linked to the specified Territorio
-     */
-    public List<Localita> findLocationsFromTerritorio(Territorio territorio) {
-        return delegate.findLocalitaByTerritorio(territorio);
-    }
 
     /**
      * Retrieves a Localita entity based on its unique identifier.
@@ -51,8 +41,7 @@ public class LocalitaRepository {
      * @param nome the partial name of the Localita to match (prefix search)
      * @return a list of Localita entities that match the specified criteria
      */
-    public List<Localita> findLocationsFromTerritorioDataENome(String code, LocalDate data, String nome) {
-        String nomeLocalita = nome != null ? nome.toUpperCase() + "%" : "%";
-        return delegate.findLocalitaPerTerritorioDataENome(code, nomeLocalita, data);
+    public List<Localita> findLocationsFromTerritorioDataENome(String code, String data, String nome) {
+        return delegate.findLocalitaPerTerritorioDataENome(code, nome, data);
     }
 }

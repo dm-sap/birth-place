@@ -39,14 +39,6 @@ public class Territorio {
     @Column(name = "DATA_FINE_VAL")
     private LocalDate dataFineVal;
 
-    @ColumnDefault("CURRENT_TIMESTAMP")
-    @Column(name = "DATA_INS", nullable = false)
-    private OffsetDateTime dataIns;
-
-    @ColumnDefault("CURRENT_TIMESTAMP")
-    @Column(name = "DATA_AGG")
-    private OffsetDateTime dataAgg;
-
     public boolean isValid(LocalDate date) {
         return dataInizioVal.isBefore(date) &&(dataFineVal == null || dataFineVal.isAfter(date));
     }

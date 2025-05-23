@@ -37,16 +37,16 @@ public class LocalitaService {
      *
      * @param identificativo the unique identifier of the territorial entity
      * @param dataNascita    the birth date associated with the locality, in string format (ISO local date)
-     * @param nomeLocalita   the name of the locality to filter results
+     * @param nomeLoc        the name of the locality to filter results
      * @return a list of LocalitaView objects representing localities associated with the given parameters, sorted alphabetically by name
      * @throws LocalitaNonTrovataException if no localities are found matching the given filters
      */
-    public List<LocalitaView> recuperaLocalitaAssociateATerritorio(String identificativo, String dataNascita, String nomeLocalita)
+    public List<LocalitaView> recuperaLocalitaAssociateATerritorio(String identificativo, String dataNascita, String nomeLoc)
             throws LocalitaNonTrovataException {
-        LocalDate data = dataNascita != null ? LocalDate.parse(dataNascita) : null;
-        List<Localita> localita = localitaRepository.findLocationsFromTerritorioDataENome(identificativo, data, nomeLocalita);
+        String nomeLocalita = nomeLoc != null ? nomeLoc.toUpperCase() + "%" : "%";
+        List<Localita> localita = localitaRepository.findLocationsFromTerritorioDataENome(identificativo, dataNascita, nomeLocalita);
         if (localita.isEmpty()) {
-            throw LocalitaNonTrovataException.perTerritorioDataENome(identificativo, data, nomeLocalita);
+            throw LocalitaNonTrovataException.perTerritorioDataENome(identificativo, dataNascita, nomeLocalita);
         }
         return localita.stream()
                 .map(LocalitaView::crea)

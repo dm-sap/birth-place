@@ -45,11 +45,12 @@ public class TerritorioRepository {
      * matching the provided {@code codCatastale} and valid at the specified {@code dataNascita}.
      *
      * @param codCatastale the cadastral code used to filter Territorio entities
-     * @param dataNascita the date used to check the validity of Territorio entities
+     * @param dataNascita  the date used to check the validity of Territorio entities
      * @return a list of Territorio entities that match the given cadastral code and are valid at the specified date
      */
     public List<Territorio> findByCodCatastale(CodiceCatastale codCatastale, LocalDate dataNascita) {
-        return delegate.findByCodCatastaleValido(codCatastale.getCodice(), dataNascita);
+        String data = dataNascita != null ? dataNascita.toString() : null;
+        return delegate.findByCodCatastaleValido(codCatastale.getCodice(), data);
     }
 
     /**
@@ -58,7 +59,8 @@ public class TerritorioRepository {
      * @return list of all Territorio entities
      */
     public List<Territorio> findAll(LocalDate dataNascita) {
-        return delegate.findAllValid(dataNascita);
+        String data = dataNascita != null ? dataNascita.toString() : null;
+        return delegate.findAllValid(data);
     }
 
 
