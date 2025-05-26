@@ -1,7 +1,6 @@
 package it.maeci.territory.core.localita.jpa;
 
 import it.maeci.territory.core.localita.Localita;
-import it.maeci.territory.core.territorio.Territorio;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -19,9 +18,9 @@ public class JpaLocalitaRepositoryDelegateCustomImpl implements JpaLocalitaRepos
     @Override
     public List<Localita> findLocalitaPerTerritorioDataENome(String territorioId, String nome, String dataNascita) {
         StringBuilder queryBuilder = new StringBuilder("SELECT * FROM CODIFICA3.LOCALITA l ");
-        filtraPerIdentificativo(WHERE, territorioId, queryBuilder);
-        filtraPerData(AND, dataNascita, queryBuilder);
-        filtraPerNome(AND, nome, queryBuilder);
+        filtraPerIdentificativo(territorioId, queryBuilder);
+        filtraPerData(dataNascita, queryBuilder);
+        filtraPerNome(nome, queryBuilder);
 
         Query query = entityManager.createNativeQuery(queryBuilder.toString(), Localita.class);
 
@@ -35,13 +34,12 @@ public class JpaLocalitaRepositoryDelegateCustomImpl implements JpaLocalitaRepos
     /**
      * Filtra per codice catastale.
      *
-     * @param operatore    operatore
      * @param territorioId territorioId
      * @param queryBuilder queryBuilder
      */
-    private void filtraPerIdentificativo(String operatore, String territorioId, StringBuilder queryBuilder) {
+    private void filtraPerIdentificativo(String territorioId, StringBuilder queryBuilder) {
         if (territorioId != null && !territorioId.isEmpty()) {
-            queryBuilder.append(operatore);
+            operatore(queryBuilder);
             queryBuilder.append(" l.TERRITORIO_ID = :territorioId ");
         }
     }
@@ -49,13 +47,12 @@ public class JpaLocalitaRepositoryDelegateCustomImpl implements JpaLocalitaRepos
     /**
      * Filtra per data.
      *
-     * @param operatore    operatore
      * @param data         data
      * @param queryBuilder queryBuilder
      */
-    private void filtraPerData(String operatore, String data, StringBuilder queryBuilder) {
+    private void filtraPerData(String data, StringBuilder queryBuilder) {
         if (data != null && !data.isEmpty()) {
-            queryBuilder.append(operatore);
+            operatore(queryBuilder);
             queryBuilder.append(" (TRUNC(l.DATA_INIZIO_VAL) < TO_DATE(:dataNascita,'YYYY-MM-DD') " +
                     "AND NVL(TRUNC(l.DATA_FINE_VAL), TO_DATE('9999-12-31','YYYY-MM-DD')) > TO_DATE(:dataNascita,'YYYY-MM-DD')) ");
         }
@@ -64,14 +61,13 @@ public class JpaLocalitaRepositoryDelegateCustomImpl implements JpaLocalitaRepos
     /**
      * Filtra per nome.
      *
-     * @param operatore    operatore
      * @param nome         nome
      * @param queryBuilder queryBuilder
      */
-    private void filtraPerNome(String operatore, String nome, StringBuilder queryBuilder) {
+    private void filtraPerNome(String nome, StringBuilder queryBuilder) {
         if (nome != null && !nome.isEmpty()) {
-            queryBuilder.append(operatore);
-            queryBuilder.append(" l.NOME LIKE :nome ");
+            operatore(queryBuilder);
+            queryBuilder.append(" UPPER(REPLACE(l.NOME, '-', ' ')) LIKE :nome ");
         }
     }
 
@@ -86,6 +82,21 @@ public class JpaLocalitaRepositoryDelegateCustomImpl implements JpaLocalitaRepos
         if (parameterInput != null && !parameterInput.isEmpty()) {
             query.setParameter(parameterName, parameterInput);
         }
+    }
+
+    /**
+     * Appends the appropriate query operator ("WHERE" or "AND") to the provided
+     * {@code queryBuilder} based on its current content. If the query already
+     * contains the "WHERE" clause, the method adds "AND"; otherwise, it adds "WHERE".
+     *
+     * @param queryBuilder the {@code StringBuilder} instance representing the query
+     *                     being constructed
+     */
+    private static void operatore(StringBuilder queryBuilder) {
+        if (queryBuilder.toString().contains(WHERE))
+            queryBuilder.append(AND);
+        else
+            queryBuilder.append(WHERE);
     }
 }
 

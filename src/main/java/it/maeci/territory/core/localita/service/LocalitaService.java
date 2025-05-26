@@ -43,7 +43,7 @@ public class LocalitaService {
      */
     public List<LocalitaView> recuperaLocalitaAssociateATerritorio(String identificativo, String dataNascita, String nomeLoc)
             throws LocalitaNonTrovataException {
-        String nomeLocalita = nomeLoc != null ? nomeLoc.toUpperCase().trim() + "%" : "%";
+        String nomeLocalita = nomeLoc != null ? nomeLoc.toUpperCase().trim().replace("-"," ") + "%" : "%";
         List<Localita> localita = localitaRepository.findLocationsFromTerritorioDataENome(identificativo, dataNascita, nomeLocalita);
         if (localita.isEmpty()) {
             throw LocalitaNonTrovataException.perTerritorioDataENome(identificativo, dataNascita, nomeLocalita);

@@ -23,7 +23,7 @@ public class JpaTerritorioRepositoryDelegateCustomImpl implements JpaTerritorioR
     @Override
     public List<Territorio> findAllValid(String dataNascita) {
         StringBuilder queryBuilder = new StringBuilder("SELECT * FROM CODIFICA3.TERRITORIO t ");
-        filtraPerData(WHERE, dataNascita, queryBuilder);
+        filtraPerData(dataNascita, queryBuilder);
 
         Query query = entityManager.createNativeQuery(queryBuilder.toString(), Territorio.class);
 
@@ -43,8 +43,8 @@ public class JpaTerritorioRepositoryDelegateCustomImpl implements JpaTerritorioR
     public List<Territorio> findByCodCatastaleValido(String codCatastale, String dataNascita) {
 
         StringBuilder queryBuilder = new StringBuilder("SELECT * FROM CODIFICA3.TERRITORIO t ");
-        filtraPerCodiceCatastale(WHERE, codCatastale, queryBuilder);
-        filtraPerData(AND, dataNascita, queryBuilder);
+        filtraPerCodiceCatastale(codCatastale, queryBuilder);
+        filtraPerData(dataNascita, queryBuilder);
 
         Query query = entityManager.createNativeQuery(queryBuilder.toString(), Territorio.class);
 
@@ -57,13 +57,12 @@ public class JpaTerritorioRepositoryDelegateCustomImpl implements JpaTerritorioR
     /**
      * Filtra per codice catastale.
      *
-     * @param operatore       operatore
      * @param codiceCatastale codiceCatastale
      * @param queryBuilder    queryBuilder
      */
-    private void filtraPerCodiceCatastale(String operatore, String codiceCatastale, StringBuilder queryBuilder) {
+    private void filtraPerCodiceCatastale(String codiceCatastale, StringBuilder queryBuilder) {
         if (codiceCatastale != null && !codiceCatastale.isEmpty()) {
-            queryBuilder.append(operatore);
+            operatore(queryBuilder);
             queryBuilder.append(" t.COD_CATASTALE = :codiceCatastale ");
         }
     }
@@ -71,13 +70,12 @@ public class JpaTerritorioRepositoryDelegateCustomImpl implements JpaTerritorioR
     /**
      * Filtra per data.
      *
-     * @param operatore    operatore
      * @param data         data
      * @param queryBuilder queryBuilder
      */
-    private void filtraPerData(String operatore, String data, StringBuilder queryBuilder) {
+    private void filtraPerData(String data, StringBuilder queryBuilder) {
         if (data != null && !data.isEmpty()) {
-            queryBuilder.append(operatore);
+            operatore(queryBuilder);
             queryBuilder.append(" (TRUNC(t.DATA_INIZIO_VAL) < TO_DATE(:dataNascita,'YYYY-MM-DD') " +
                     "AND NVL(TRUNC(t.DATA_FINE_VAL), TO_DATE('9999-12-31','YYYY-MM-DD')) > TO_DATE(:dataNascita,'YYYY-MM-DD')) ");
         }
@@ -94,6 +92,21 @@ public class JpaTerritorioRepositoryDelegateCustomImpl implements JpaTerritorioR
         if (parameterInput != null && !parameterInput.isEmpty()) {
             query.setParameter(parameterName, parameterInput);
         }
+    }
+
+    /**
+     * Appends the appropriate query operator ("WHERE" or "AND") to the provided
+     * {@code queryBuilder} based on its current content. If the query already
+     * contains the "WHERE" clause, the method adds "AND"; otherwise, it adds "WHERE".
+     *
+     * @param queryBuilder the {@code StringBuilder} instance representing the query
+     *                     being constructed
+     */
+    private static void operatore(StringBuilder queryBuilder) {
+        if (queryBuilder.toString().contains(WHERE))
+            queryBuilder.append(AND);
+        else
+            queryBuilder.append(WHERE);
     }
 }
 

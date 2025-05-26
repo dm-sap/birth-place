@@ -1,7 +1,6 @@
 package it.maeci.territory.core.comune.jpa;
 
 import it.maeci.territory.core.comune.Comune;
-import it.maeci.territory.core.localita.Localita;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -19,8 +18,8 @@ public class JpaComuniRepositoryDelegateCustomImpl implements JpaComuniRepositor
     @Override
     public List<Comune> findByCodCatastaleEData(String codiceCatastale, String dataNascita) {
         StringBuilder queryBuilder = new StringBuilder("SELECT * FROM CODIFICA3.COMUNE c ");
-        filtraPerCodiceCatastale(WHERE, codiceCatastale, queryBuilder);
-        filtraPerData(AND, dataNascita, queryBuilder);
+        filtraPerCodiceCatastale(codiceCatastale, queryBuilder);
+        filtraPerData(dataNascita, queryBuilder);
 
         Query query = entityManager.createNativeQuery(queryBuilder.toString(), Comune.class);
 
@@ -33,8 +32,8 @@ public class JpaComuniRepositoryDelegateCustomImpl implements JpaComuniRepositor
     @Override
     public List<Comune> findAllPerDataENome(String dataNascita, String nome) {
         StringBuilder queryBuilder = new StringBuilder("SELECT * FROM CODIFICA3.COMUNE c ");
-        filtraPerData(WHERE, dataNascita, queryBuilder);
-        filtraPerNome(AND, nome, queryBuilder);
+        filtraPerData(dataNascita, queryBuilder);
+        filtraPerNome(nome, queryBuilder);
 
         Query query = entityManager.createNativeQuery(queryBuilder.toString(), Comune.class);
 
@@ -48,13 +47,12 @@ public class JpaComuniRepositoryDelegateCustomImpl implements JpaComuniRepositor
     /**
      * Filtra per codice catastale.
      *
-     * @param operatore       operatore
      * @param codiceCatastale codiceCatastale
      * @param queryBuilder    queryBuilder
      */
-    private void filtraPerCodiceCatastale(String operatore, String codiceCatastale, StringBuilder queryBuilder) {
+    private void filtraPerCodiceCatastale(String codiceCatastale, StringBuilder queryBuilder) {
         if (codiceCatastale != null && !codiceCatastale.isEmpty()) {
-            queryBuilder.append(operatore);
+            operatore(queryBuilder);
             queryBuilder.append(" c.COD_CATASTALE = :codiceCatastale ");
         }
     }
@@ -62,13 +60,12 @@ public class JpaComuniRepositoryDelegateCustomImpl implements JpaComuniRepositor
     /**
      * Filtra per data.
      *
-     * @param operatore    operatore
      * @param data         data
      * @param queryBuilder queryBuilder
      */
-    private void filtraPerData(String operatore, String data, StringBuilder queryBuilder) {
+    private void filtraPerData(String data, StringBuilder queryBuilder) {
         if (data != null && !data.isEmpty()) {
-            queryBuilder.append(operatore);
+            operatore(queryBuilder);
             queryBuilder.append(" (TRUNC(c.DATA_INIZIO_VAL) < TO_DATE(:dataNascita,'YYYY-MM-DD') " +
                     "AND NVL(TRUNC(c.DATA_FINE_VAL), TO_DATE('9999-12-31','YYYY-MM-DD')) > TO_DATE(:dataNascita,'YYYY-MM-DD')) ");
         }
@@ -77,14 +74,13 @@ public class JpaComuniRepositoryDelegateCustomImpl implements JpaComuniRepositor
     /**
      * Filtra per nome.
      *
-     * @param operatore    operatore
      * @param nome         nome
      * @param queryBuilder queryBuilder
      */
-    private void filtraPerNome(String operatore, String nome, StringBuilder queryBuilder) {
+    private void filtraPerNome(String nome, StringBuilder queryBuilder) {
         if (nome != null && !nome.isEmpty()) {
-            queryBuilder.append(operatore);
-            queryBuilder.append(" c.NOME LIKE :nome ");
+            operatore(queryBuilder);
+            queryBuilder.append(" UPPER(REPLACE(c.NOME, '-', ' ')) LIKE :nome ");
         }
     }
 
@@ -101,6 +97,20 @@ public class JpaComuniRepositoryDelegateCustomImpl implements JpaComuniRepositor
         }
     }
 
+    /**
+     * Appends the appropriate query operator ("WHERE" or "AND") to the provided
+     * {@code queryBuilder} based on its current content. If the query already
+     * contains the "WHERE" clause, the method adds "AND"; otherwise, it adds "WHERE".
+     *
+     * @param queryBuilder the {@code StringBuilder} instance representing the query
+     *                     being constructed
+     */
+    private static void operatore(StringBuilder queryBuilder) {
+        if (queryBuilder.toString().contains(WHERE))
+            queryBuilder.append(AND);
+        else
+            queryBuilder.append(WHERE);
+    }
 
 }
 
