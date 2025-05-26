@@ -4,7 +4,6 @@ import it.maeci.territory.core.localita.Localita;
 import it.maeci.territory.core.localita.LocalitaId;
 import it.maeci.territory.core.localita.LocalitaRepository;
 import it.maeci.territory.core.localita.LocalitaView;
-import it.maeci.territory.core.territorio.TerritorioRepository;
 import it.maeci.territory.errors.LocalitaNonTrovataException;
 import org.springframework.stereotype.Service;
 
@@ -24,11 +23,9 @@ import java.util.stream.Collectors;
 public class LocalitaService {
 
     private final LocalitaRepository localitaRepository;
-    private final TerritorioRepository territorioRepository;
 
-    public LocalitaService(LocalitaRepository localitaRepository, TerritorioRepository territorioRepository) {
+    public LocalitaService(LocalitaRepository localitaRepository) {
         this.localitaRepository = localitaRepository;
-        this.territorioRepository = territorioRepository;
     }
 
     /**
@@ -43,7 +40,7 @@ public class LocalitaService {
      */
     public List<LocalitaView> recuperaLocalitaAssociateATerritorio(String identificativo, String dataNascita, String nomeLoc)
             throws LocalitaNonTrovataException {
-        String nomeLocalita = nomeLoc != null ? nomeLoc.toUpperCase().trim().replace("-"," ") + "%" : "%";
+        String nomeLocalita = nomeLoc != null ? nomeLoc.toUpperCase().trim().replace("-", " ") + "%" : "%";
         List<Localita> localita = localitaRepository.findLocationsFromTerritorioDataENome(identificativo, dataNascita, nomeLocalita);
         if (localita.isEmpty()) {
             throw LocalitaNonTrovataException.perTerritorioDataENome(identificativo, dataNascita, nomeLocalita);
