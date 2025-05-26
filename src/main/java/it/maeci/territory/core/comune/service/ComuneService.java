@@ -57,7 +57,7 @@ public class ComuneService {
      * @return a list of ComuneView objects representing filtered and sorted Comune entities
      */
     public List<ComuneView> recuperaComuniEDataENome(String data, String nome) {
-        String nomeComune = nome != null ? nome.toUpperCase() + "%" : "%";
+        String nomeComune = nome != null ? nome.toUpperCase().trim()+"%" : "%";
         List<Comune> comuni = repository.findAllPerDataENome(data, nomeComune);
         return comuni.stream()
                 .map(ComuneView::crea)
