@@ -18,4 +18,13 @@ import java.util.List;
 public interface JpaTerritorioRepositoryDelegate extends JpaRepository<Territorio, String>,
         JpaTerritorioRepositoryDelegateCustom {
 
+    @Query(value = "SELECT * " +
+            "FROM CODIFICA3.TERRITORIO t " +
+            "WHERE ( " +
+            "        :data IS NULL OR " +
+            "        (t.DATA_INIZIO_VAL < :data " +
+            "         AND NVL(t.DATA_FINE_VAL, TO_DATE('9999-12-31','YYYY-MM-DD')) > :data) " +
+            "      ) " +
+            "  AND t.NOME LIKE :nome", nativeQuery = true)
+    List<Territorio> findAllValidWithName(LocalDate data, String nome);
 }

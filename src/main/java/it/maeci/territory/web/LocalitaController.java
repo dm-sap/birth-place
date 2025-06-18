@@ -7,10 +7,7 @@ import it.maeci.territory.core.localita.LocalitaView;
 import it.maeci.territory.core.localita.service.LocalitaService;
 import it.maeci.territory.errors.LocalitaNonTrovataException;
 import org.springdoc.api.annotations.ParameterObject;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -21,6 +18,7 @@ import java.util.List;
 @RequestMapping("/private/localita")
 @Tag(name = "Gestione delle Località")
 @ApiResponse(responseCode = "200", description = "Richiesta completata con successo")
+@CrossOrigin
 public class LocalitaController {
 
     private final LocalitaService localitaService;

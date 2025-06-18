@@ -1,10 +1,11 @@
 package it.maeci.territory.core.territorio.service;
 
 import it.maeci.territory.core.comune.CodiceCatastale;
+import it.maeci.territory.core.localita.LocalitaView;
 import it.maeci.territory.core.territorio.Territorio;
 import it.maeci.territory.core.territorio.TerritorioRepository;
 import it.maeci.territory.core.territorio.TerritorioView;
-import it.maeci.territory.errors.TerritorioError;
+import it.maeci.territory.errors.LocalitaNonTrovataException;
 import it.maeci.territory.errors.TerritorioNonTrovatoException;
 import org.springframework.stereotype.Service;
 
@@ -75,5 +76,16 @@ public class TerritorioService {
         Territorio territorio = repository.findById(territorioId)
                 .orElseThrow(()->TerritorioNonTrovatoException.perIdentificativo(territorioId));
         return TerritorioView.crea(territorio);
+    }
+
+    public List<TerritorioView> recuperaTerritorioConNome(String data, String nome) {
+        String nomeTerritorio = nome != null ? nome.toUpperCase().trim().replace("-", " ") + "%" : "%";
+        LocalDate localDate = data != null ? LocalDate.parse(data) : null;
+
+        List<Territorio> territori = repository.findTerritorioConNome(localDate, nomeTerritorio);
+        return territori.stream()
+                .map(TerritorioView::crea)
+                .sorted((t1, t2) -> t1.getNome().compareToIgnoreCase(t2.getNome()))
+                .collect(Collectors.toList());
     }
 }

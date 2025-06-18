@@ -59,9 +59,11 @@ public class TerritorioRepository {
      * @return list of all Territorio entities
      */
     public List<Territorio> findAll(LocalDate dataNascita) {
-        String data = dataNascita != null ? dataNascita.toString() : null;
-        return delegate.findAllValid(data);
+        return null;
     }
 
 
+    public List<Territorio> findTerritorioConNome(LocalDate data, String nomeTerritorio) {
+        return delegate.findAllValidWithName(data,nomeTerritorio);
+    }
 }

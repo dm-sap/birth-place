@@ -7,10 +7,7 @@ import it.maeci.territory.core.comune.ComuneView;
 import it.maeci.territory.core.comune.service.ComuneService;
 import it.maeci.territory.errors.ComuneNonTrovatoException;
 import org.springdoc.api.annotations.ParameterObject;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -19,6 +16,7 @@ import java.util.List;
 @RequestMapping("/private/comune")
 @Tag(name = "Gestione dei Comuni")
 @ApiResponse(responseCode = "200", description = "Richiesta completata con successo")
+@CrossOrigin
 public class ComuneController {
 
     private final ComuneService comuneService;
@@ -52,7 +50,7 @@ public class ComuneController {
      *                - nome: the name or partial name of the municipalities to filter
      * @return a list of ComuneView objects representing the filtered municipalities
      */
-    @GetMapping("/tutti")
+    @GetMapping()
     @Operation(description = "Ritorna tutti i comuni per data e nome")
     public List<ComuneView> recuperaComuni(@ParameterObject ComuniRequest request) {
         return comuneService.recuperaComuniEDataENome(request.getData(), request.getNome());

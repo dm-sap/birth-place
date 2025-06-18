@@ -16,6 +16,7 @@ import java.util.List;
 @RequestMapping("/private/territorio")
 @Tag(name = "Gestione dei Territori")
 @ApiResponse(responseCode = "200", description = "Richiesta completata con successo")
+@CrossOrigin
 public class TerritorioController {
 
     private final TerritorioService territorioService;
@@ -63,5 +64,17 @@ public class TerritorioController {
     @Operation(description = "Recupera un territorio per identificativo")
     public TerritorioView recuperaTerritoriValidi(@PathVariable(value = "id") String territorioId) throws TerritorioNonTrovatoException {
         return territorioService.recuperaTerritorioPerIdentificativo(territorioId);
+    }
+
+    /**
+     * Retrieves a list of valid territories based on the provided birthdate filter.
+     * If the birthdate is not specified, all territories are returned without filtering.
+     *
+     * @param request an object containing the date used to filter valid territories.
+     *                  The date should be in ISO*/
+    @GetMapping()
+    @Operation(description = "Ritorna tutti i territori in funzione della data e nome")
+    public List<TerritorioView> recuperaTerritoriValidiPerNome(@ParameterObject TerritorioRequest request) {
+        return territorioService.recuperaTerritorioConNome(request.getData(), request.getNome());
     }
 }
